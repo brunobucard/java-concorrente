@@ -23,9 +23,20 @@ public class ServidorTarefas {
 	public ServidorTarefas() throws IOException {
 		System.out.println("--- Iniciando servidor ---");
 		this.servidor = new ServerSocket(12345);
-		this.threadPoll = Executors.newFixedThreadPool(4, new FabricaDeThreads());	//newCachedThreadPool();
+		this.threadPoll = Executors.newCachedThreadPool(new FabricaDeThreads());	//newCachedThreadPool();
 		this.estaRodando = new AtomicBoolean(true);
 		this.filaComandos = new ArrayBlockingQueue<>(2);
+		iniciarConsumidores();
+	}
+
+	private void iniciarConsumidores() {
+		
+		int qtdConsumidores = 2;
+		for (int i = 0; i < qtdConsumidores; i++) {
+			TarefaConsumir tarefa = new TarefaConsumir(filaComandos);
+			this.threadPoll.execute(tarefa);
+			
+		}
 	}
 
 	public static void main(String[] args) throws Exception {

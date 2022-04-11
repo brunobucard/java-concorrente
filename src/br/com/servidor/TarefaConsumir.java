@@ -17,9 +17,13 @@ public class TarefaConsumir implements Runnable {
 	@Override
 	public void run() {
 		try {
-			String comando = filaComandos.take();
-			System.out.println("Consumindo comando" + comando);
-			Thread.sleep(5000);
+			String comando = null;
+			
+			while ((comando = filaComandos.take()) != null) {
+				System.out.println("Consumindo comando" + comando + ", " + Thread.currentThread().getName());
+				Thread.sleep(10000);
+				
+			}
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e); 
 		}
